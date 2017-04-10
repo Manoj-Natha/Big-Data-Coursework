@@ -1,0 +1,9 @@
+crawl = load 'webcrawl' as (url:chararray, pageid:chararray, outlinks:bag{u:(p:chararray)});
+flatCrawl = foreach crawl generate url, flatten(outlinks) as outlink;
+outBoundGrp = group flatCrawl by url;
+outLinksCount = foreach outBoundGrp generate group, COUNT(flatCrawl) as No_Of_outlinks;
+inBoundGrp = group flatCrawl by outlink;
+inLinksCount = foreach inBoundGrp generate group, COUNT(flatCrawl) as No_Of_inlinks;
+joinInfo = JOIN outLinksCount BY group LEFT OUTER, inLinksCount BY group;
+result = FOREACH joinInfo GENERATE outLinksCount::group as page,outLinksCount::No_Of_outlinks,inLinksCount::No_Of_inlinks;
+store result into 'pig_6_result';

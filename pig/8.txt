@@ -1,0 +1,8 @@
+players = load 'baseball' as (name:chararray, team:chararray, position:bag{t:(p:chararray)}, bat:map[]);
+players_team = foreach players generate name, team;
+teamGroup = group players_team by team;
+noOfPlayers = foreach teamGroup generate group, COUNT(players_team) as players_count;
+sortedTeams = order noOfPlayers by players_count desc;
+top5Teams = limit sortedTeams 5;
+dump top5Teams;
+store top5Teams into 'pig_8_result';

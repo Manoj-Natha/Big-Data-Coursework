@@ -1,0 +1,6 @@
+divs = load 'NYSE_dividends' as (exchange, symbol, date, dividends);
+describe divs;
+grpd= group divs by symbol;
+maxDividens = foreach grpd generate group, MAX(divs.dividends);
+dump maxDividens;
+store maxDividens into 'pig_2_result';

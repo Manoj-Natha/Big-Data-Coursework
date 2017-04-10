@@ -1,0 +1,8 @@
+divs = load 'NYSE_dividends' as (exchange, symbol, date, dividends);
+prices = load 'NYSE_daily' as (exchange, symbol, date, open, high, low, close, volume, adj_close);
+divs_prices = join divs by symbol, prices by symbol;
+symbolGroup = group divs_prices by divs::symbol;
+avgValues = foreach symbolGroup generate group, AVG(divs_prices.open),AVG(divs_prices.dividends);
+dump avgValues;
+store avgValues into 'pig_3_result';
+

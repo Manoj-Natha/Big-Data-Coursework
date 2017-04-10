@@ -1,0 +1,7 @@
+divs = load 'NYSE_dividends' as (exchange, symbol, date, dividends);
+prices = load 'NYSE_daily' as (exchange, symbol, date, open, high, low, close, volume, adj_close);
+divs_prices = cogroup divs by symbol, prices by symbol;
+noDividensStocks = filter divs_prices by COUNT(divs)==0;
+result = foreach noDividensStocks generate group;
+dump result;
+store result into 'pig_5_result';

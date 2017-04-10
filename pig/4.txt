@@ -1,0 +1,8 @@
+players = load 'baseball' as (name:chararray, team:chararray, position:bag{t:(p:chararray)}, bat:map[]);
+describe players;
+pos = foreach players generate name, flatten(position) as position;
+bypos = group pos by position;
+countPosition = foreach bypos generate group, COUNT(pos);
+dump countPosition;
+store countPosition into 'pig_4_result';
+
